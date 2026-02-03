@@ -4,84 +4,93 @@
 <meta charset="UTF-8">
 <title>منوی کافه کاردیتو</title>
 <link href="https://fonts.googleapis.com/css2?family=Vazir&family=Permanent+Marker&display=swap" rel="stylesheet">
+
 <style>
 body {
   font-family: "Vazir", sans-serif;
   direction: rtl;
   margin:0;
-  padding:0;
-  min-height: 100vh;
-  background: #046d44; /* سبز زمردی ساده */
-  position: relative;
-  overflow-x: hidden;
+  min-height:100vh;
+  background:#046d44; /* سبز زمردی */
+  overflow-x:hidden;
+  position:relative;
 }
 
-/* لوگوی وسط پس‌زمینه */
+/* لوگوی بزرگ وسط با موج */
 body::before {
   content:"";
   position:absolute;
   top:50%;
   left:50%;
-  transform: translate(-50%, -50%);
-  width:400px;
-  height:400px;
-  background: url('logo.png') no-repeat center/contain;
+  transform:translate(-50%,-50%);
+  width:520px; /* بزرگ‌تر */
+  height:520px;
+  background:url("logo.png") center/contain no-repeat;
   opacity:1;
+  animation: waveFade 6s infinite ease-in-out;
   pointer-events:none;
-  animation: pulse 3s infinite ease-in-out;
 }
 
-@keyframes pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50% { transform: translate(-50%, -50%) scale(1.1); }
+/* موج نور + محوشدن */
+@keyframes waveFade {
+  0% {
+    mask-image: linear-gradient(90deg, transparent 0%, black 20%, black 100%);
+    opacity:0.9;
+  }
+  50% {
+    mask-image: linear-gradient(90deg, black 0%, black 60%, transparent 100%);
+    opacity:0.3;
+  }
+  100% {
+    mask-image: linear-gradient(90deg, transparent 0%, black 20%, black 100%);
+    opacity:0.9;
+  }
 }
 
 .container {
   max-width:900px;
-  margin:auto;
+  margin:40px auto;
   padding:30px;
-  background: rgba(100,100,100,0.95); /* خاکستری پررنگ */
-  border-radius:25px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-  position: relative;
+  background:rgba(85,85,85,0.96); /* خاکستری پررنگ */
+  border-radius:26px;
+  box-shadow:0 25px 50px rgba(0,0,0,0.3);
+  position:relative;
   z-index:1;
-  text-align: center;
+  text-align:center;
 }
 
 h1 {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Permanent Marker', cursive;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:'Permanent Marker', cursive;
   font-size:62px;
   color:#fff;
-  text-shadow:2px 2px 8px rgba(0,0,0,0.35);
-  margin-bottom:50px;
+  margin-bottom:45px;
+  text-shadow:2px 2px 10px rgba(0,0,0,0.4);
 }
 
-/* لوگوی کنار متن سر برگ با انیمیشن برق */
+/* لوگوی کنار عنوان – برق ملایم */
 h1 img {
-  height:100px;
+  height:110px;
   margin-left:25px;
-  animation: sparkle 2s infinite;
+  animation: glow 2.5s infinite ease-in-out;
 }
 
-@keyframes sparkle {
-  0%, 100% { filter: brightness(100%); transform: scale(1); }
-  25% { filter: brightness(150%); transform: scale(1.05) rotate(-2deg); }
-  50% { filter: brightness(120%); transform: scale(1.1) rotate(2deg); }
-  75% { filter: brightness(140%); transform: scale(1.05) rotate(-1deg); }
+@keyframes glow {
+  0%,100% { filter:brightness(100%); }
+  50% { filter:brightness(150%); }
 }
 
 .category {
   background:#05985f;
-  color:white;
-  padding:25px;
+  color:#fff;
+  padding:26px;
   margin:20px 0;
-  cursor:pointer;
   font-size:30px;
-  border-radius:15px;
-  box-shadow:0 6px 20px rgba(0,0,0,0.25);
+  border-radius:16px;
+  cursor:pointer;
+  box-shadow:0 8px 22px rgba(0,0,0,0.25);
   transition:0.3s;
 }
 .category:hover { background:#047a4a; }
@@ -89,86 +98,78 @@ h1 img {
 .items {
   display:none;
   background:#fff;
-  border-radius:15px;
+  border-radius:16px;
+  padding:22px;
   margin-bottom:25px;
-  padding:20px;
-  box-shadow:0 6px 25px rgba(0,0,0,0.08);
 }
 
 .item {
   display:flex;
-  justify-content: space-between;
+  justify-content:space-between;
   padding:18px 0;
   border-bottom:1px solid #eee;
   font-size:24px;
 }
 .item:last-child { border-bottom:none; }
-.item .name-desc { text-align:right; }
-.item .price { text-align:left; font-weight:bold; min-width:70px; }
-.item small { color:#555; font-size:20px; }
 
+.name-desc { text-align:right; }
+.price { font-weight:bold; min-width:80px; }
+small { font-size:20px; color:#555; }
 </style>
 </head>
+
 <body>
 <div class="container">
-<h1>
-  منوی کافه کاردیتو
-  <img src="logo.png" alt="لوگو کافه">
-</h1>
+  <h1>
+    منوی کافه کاردیتو
+    <img src="logo.png" alt="لوگو">
+  </h1>
 
-<div id="menu-container"></div>
-
+  <div id="menu-container"></div>
 </div>
 
 <script>
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pub?gid=0&single=true&output=csv";
 
 function toggleCategory(id){
-  const el = document.getElementById(id);
-  el.style.display = el.style.display==='none'?'block':'none';
+  const el=document.getElementById(id);
+  el.style.display = el.style.display==="block"?"none":"block";
 }
 
 fetch(CSV_URL)
-.then(r => r.text())
-.then(text => {
-  const rows = text.split('\n').slice(1).filter(r=>r.trim()!=="");
-  const categories = {};
+.then(r=>r.text())
+.then(text=>{
+  const rows=text.split("\n").slice(1).filter(r=>r.trim());
+  const cats={};
 
-  rows.forEach(row => {
-    const cols = row.split(',');
-    const [category, name, desc, price, img, status] = cols.map(c=>c.trim());
-    if(status==='on'){
-      if(!categories[category]) categories[category] = [];
-      categories[category].push({name, desc, price, img});
+  rows.forEach(r=>{
+    const [c,n,d,p,_,s]=r.split(",");
+    if(s==="on"){
+      if(!cats[c]) cats[c]=[];
+      cats[c].push({n,d,p});
     }
   });
 
-  const container = document.getElementById('menu-container');
+  const box=document.getElementById("menu-container");
+  Object.keys(cats).forEach(c=>{
+    const h=document.createElement("div");
+    h.className="category";
+    h.innerText=c;
+    h.onclick=()=>toggleCategory(c);
+    box.appendChild(h);
 
-  Object.keys(categories).forEach(cat=>{
-    const catDiv = document.createElement('div');
-    catDiv.className = 'category';
-    catDiv.innerText = cat;
-    catDiv.onclick = ()=>toggleCategory(cat);
-    container.appendChild(catDiv);
+    const i=document.createElement("div");
+    i.className="items";
+    i.id=c;
 
-    const itemsDiv = document.createElement('div');
-    itemsDiv.className = 'items';
-    itemsDiv.id = cat;
-
-    categories[cat].forEach(prod=>{
-      const itemDiv = document.createElement('div');
-      itemDiv.className = 'item';
-      itemDiv.innerHTML = `
-        <div class="name-desc">
-          ${prod.name}<br><small>${prod.desc}</small>
-        </div>
-        <div class="price">${prod.price}</div>
-      `;
-      itemsDiv.appendChild(itemDiv);
+    cats[c].forEach(x=>{
+      i.innerHTML+=`
+        <div class="item">
+          <div class="name-desc">${x.n}<br><small>${x.d}</small></div>
+          <div class="price">${x.p}</div>
+        </div>`;
     });
-
-    container.appendChild(itemsDiv);
+    box.appendChild(i);
   });
 });
 </script>
