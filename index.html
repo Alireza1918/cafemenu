@@ -10,7 +10,9 @@ body{
   font-family:"Vazir",sans-serif;
   direction:rtl;
   margin:0;
-  background:#046d44;
+  background:
+    url("logo.png") center center / 320px no-repeat,
+    #046d44;
 }
 
 .container{
@@ -19,23 +21,15 @@ body{
   padding:30px;
   background:rgba(100,100,100,0.95);
   border-radius:25px;
+  transition:0.3s;
 }
 
-.header{
+h1{
   text-align:center;
-  margin-bottom:30px;
-}
-
-.header img{
-  max-width:140px;
-  margin-bottom:10px;
-}
-
-.header h1{
   font-family:'Permanent Marker',cursive;
   font-size:56px;
   color:#fff;
-  margin:0;
+  margin-bottom:40px;
 }
 
 /* ===== tabs ===== */
@@ -63,7 +57,13 @@ body{
 }
 
 .tab.active{
-  background:#047a4a;
+  background:#fff;
+  color:#000;
+}
+
+/* ===== fullscreen mode ===== */
+.fullscreen{
+  max-width:100% !important;
 }
 
 /* ===== items ===== */
@@ -71,21 +71,14 @@ body{
   display:none;
   background:#fff;
   border-radius:14px;
-  margin-top:-10px;
-  padding:20px;
-  animation:slide 0.3s ease;
-}
-
-@keyframes slide{
-  from{transform:scaleY(0);}
-  to{transform:scaleY(1);}
+  margin-top:15px;
+  padding:25px;
 }
 
 .item{
   display:flex;
   gap:15px;
   padding:15px 0;
-  align-items:flex-start;
 }
 
 .item img{
@@ -135,18 +128,13 @@ body{
 </head>
 
 <body>
-<div class="container">
-
-  <div class="header">
-    <img src="logo.png" alt="Logo">
-    <h1>منوی کافه کاردیتو</h1>
-  </div>
+<div class="container" id="container">
+  <h1>منوی کافه کاردیتو</h1>
 
   <div class="tabs-wrapper">
     <div class="tabs" id="right-tabs"></div>
     <div class="tabs" id="left-tabs"></div>
   </div>
-
 </div>
 
 <script>
@@ -172,6 +160,7 @@ fetch(CSV_URL)
 
   const right=document.getElementById('right-tabs');
   const left=document.getElementById('left-tabs');
+  const container=document.getElementById('container');
   let side=true;
 
   Object.keys(cats).forEach(cat=>{
@@ -202,8 +191,16 @@ fetch(CSV_URL)
 
     tab.onclick=()=>{
       const open=items.style.display==='block';
-      items.style.display=open?'none':'block';
-      tab.classList.toggle('active',!open);
+
+      document.querySelectorAll('.items').forEach(i=>i.style.display='none');
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      container.classList.remove('fullscreen');
+
+      if(!open){
+        items.style.display='block';
+        tab.classList.add('active');
+        container.classList.add('fullscreen');
+      }
     };
 
     (side?right:left).appendChild(tab);
