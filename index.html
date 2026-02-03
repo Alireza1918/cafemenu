@@ -6,42 +6,70 @@
 <style>
 body {
   font-family: "Vazir", sans-serif;
-  background:#f9f9f9;
   direction: rtl;
   margin:0;
   padding:0;
+  background: linear-gradient(135deg, #a8e6cf 0%, #56ab2f 100%);
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
+
+/* اشکال هندسی سبک روی پس‌زمینه */
+body::before {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: repeating-radial-gradient(circle at 30% 30%, rgba(255,255,255,0.05) 0 20px, transparent 20px 40px);
+  pointer-events:none;
+}
+
 .container {
-  max-width:800px;
+  max-width:900px;
   margin:auto;
   padding:20px;
+  background: rgba(255,255,255,0.95);
+  border-radius:15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
+
 h1 {
   text-align:center;
   margin-bottom:30px;
+  font-size:36px;
+  color:#2e2e2e;
+  text-shadow:1px 1px 2px rgba(0,0,0,0.2);
 }
+
 .category {
-  background:#6d4c41;
+  background:#56ab2f;
   color:white;
-  padding:15px;
-  margin:10px 0;
+  padding:18px;
+  margin:15px 0;
   cursor:pointer;
-  font-size:20px;
-  border-radius:5px;
+  font-size:22px;
+  border-radius:8px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.2);
+  transition:0.3s;
 }
+.category:hover { background:#4a9726; }
+
 .items {
   display:none;
   background:#fff;
-  border:1px solid #ddd;
-  border-radius:5px;
-  margin-bottom:20px;
-  padding:10px;
+  border-radius:10px;
+  margin-bottom:25px;
+  padding:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
+
 .item {
   display:flex;
   justify-content: space-between;
-  padding:8px 0;
+  padding:12px 0;
   border-bottom:1px solid #eee;
+  font-size:18px; /* متن بزرگ‌تر و خواناتر */
 }
 .item:last-child {
   border-bottom:none;
@@ -52,7 +80,11 @@ h1 {
 .item .price {
   text-align:left;
   font-weight:bold;
-  min-width:40px;
+  min-width:50px;
+}
+.item small {
+  color:#555;
+  font-size:16px;
 }
 </style>
 </head>
@@ -68,20 +100,17 @@ h1 {
 // لینک CSV گوگل شیتت رو اینجا جایگزین کن
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pub?gid=0&single=true&output=csv";
 
-// باز و بسته کردن دسته‌ها
 function toggleCategory(id){
   const el = document.getElementById(id);
   el.style.display = el.style.display==='none'?'block':'none';
 }
 
-// گرفتن CSV و ساخت منو
 fetch(CSV_URL)
 .then(r => r.text())
 .then(text => {
   const rows = text.split('\n').slice(1).filter(r=>r.trim()!=="");
   const categories = {};
 
-  // ساخت آبجکت دسته‌ها
   rows.forEach(row => {
     const cols = row.split(',');
     const [category, name, desc, price, img, status] = cols.map(c=>c.trim());
@@ -94,14 +123,12 @@ fetch(CSV_URL)
   const container = document.getElementById('menu-container');
 
   Object.keys(categories).forEach(cat=>{
-    // دسته‌بندی
     const catDiv = document.createElement('div');
     catDiv.className = 'category';
     catDiv.innerText = cat;
     catDiv.onclick = ()=>toggleCategory(cat);
     container.appendChild(catDiv);
 
-    // محصولات
     const itemsDiv = document.createElement('div');
     itemsDiv.className = 'items';
     itemsDiv.id = cat;
@@ -124,4 +151,3 @@ fetch(CSV_URL)
 </script>
 </body>
 </html>
-
