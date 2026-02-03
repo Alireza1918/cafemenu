@@ -10,20 +10,42 @@ body{
   font-family:"Vazir",sans-serif;
   direction:rtl;
   margin:0;
-  background:
-    url("logo.png") center center / 320px no-repeat,
-    #046d44;
+  background:#046d44;
 }
 
+/* ===== background logo ===== */
+.bg-logo{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  z-index:0;
+}
+
+.bg-logo img{
+  width:320px;
+  opacity:0.15;
+}
+
+/* ===== container ===== */
 .container{
   max-width:900px;
   margin:auto;
   padding:30px;
   background:rgba(100,100,100,0.95);
   border-radius:25px;
+  position:relative;
+  z-index:2;
   transition:0.3s;
 }
 
+.fullscreen{
+  max-width:100% !important;
+}
+
+/* ===== title ===== */
 h1{
   text-align:center;
   font-family:'Permanent Marker',cursive;
@@ -59,11 +81,6 @@ h1{
 .tab.active{
   background:#fff;
   color:#000;
-}
-
-/* ===== fullscreen mode ===== */
-.fullscreen{
-  max-width:100% !important;
 }
 
 /* ===== items ===== */
@@ -128,6 +145,12 @@ h1{
 </head>
 
 <body>
+
+<!-- background logo -->
+<div class="bg-logo">
+  <img src="logo.png" alt="logo">
+</div>
+
 <div class="container" id="container">
   <h1>منوی کافه کاردیتو</h1>
 
@@ -190,7 +213,7 @@ fetch(CSV_URL)
     });
 
     tab.onclick=()=>{
-      const open=items.style.display==='block';
+      const open = items.style.display === 'block';
 
       document.querySelectorAll('.items').forEach(i=>i.style.display='none');
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -209,5 +232,6 @@ fetch(CSV_URL)
   });
 });
 </script>
+
 </body>
 </html>
