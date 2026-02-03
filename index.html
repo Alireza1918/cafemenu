@@ -16,6 +16,20 @@ body {
   overflow-x: hidden;
 }
 
+/* لوگو بزرگ روی پس‌زمینه */
+body::before {
+  content:"";
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  width:400px;
+  height:400px;
+  background: url('logo.png') no-repeat center/contain;
+  opacity:0.08; /* شفافیت کم */
+  pointer-events:none;
+}
+
 .container {
   max-width:900px;
   margin:auto;
@@ -23,15 +37,26 @@ body {
   background: rgba(100,100,100,0.95); /* خاکستری پررنگ */
   border-radius:25px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  position: relative;
+  z-index:1; /* روی لوگو پس‌زمینه */
+  text-align: center;
 }
 
 h1 {
-  text-align:center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: 'Permanent Marker', cursive;
   font-size:62px; /* سر برگ بزرگ */
   color:#fff;
   text-shadow:2px 2px 8px rgba(0,0,0,0.35);
   margin-bottom:50px;
+}
+
+/* لوگوی کوچک کنار متن سر برگ */
+h1 img {
+  height:60px; /* کوچک و پررنگ */
+  margin-left:20px;
 }
 
 .category {
@@ -82,7 +107,10 @@ h1 {
 </head>
 <body>
 <div class="container">
-<h1>منوی کافه کاردیتو</h1>
+<h1>
+  منوی کافه کاردیتو
+  <img src="logo.png" alt="لوگو کافه">
+</h1>
 
 <div id="menu-container"></div>
 
