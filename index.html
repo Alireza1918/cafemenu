@@ -3,143 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <title>منوی کافه کاردیتو</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazir&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Vazir&display=swap" rel="stylesheet">
+
 <style>
 body {
   font-family: "Vazir", sans-serif;
   direction: rtl;
   margin:0;
   padding:0;
-  min-height: 100vh;
-  background: #046d44; /* سبز زمردی ساده */
+  min-height:100vh;
+  background:#046d44;
+  overflow-x:hidden;
   position: relative;
-  overflow-x: hidden;
+}
+
+/* لوگو پس‌زمینه */
+body::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url("logo.png") center center / 420px no-repeat;
+  opacity:0.15; /* روشن‌تر شد */
+  pointer-events:none;
+  z-index:0;
 }
 
 .container {
+  position:relative;
+  z-index:1;
   max-width:900px;
   margin:auto;
   padding:30px;
-  background: rgba(100,100,100,0.95); /* خاکستری پررنگ */
+  background:rgba(100,100,100,0.95);
   border-radius:25px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  box-shadow:0 20px 40px rgba(0,0,0,0.25);
 }
 
 h1 {
   text-align:center;
-  font-family: 'Permanent Marker', cursive;
-  font-size:62px; /* سر برگ بزرگ */
+  font-size:58px;
   color:#fff;
-  text-shadow:2px 2px 8px rgba(0,0,0,0.35);
-  margin-bottom:50px;
+  margin-bottom:40px;
 }
 
 .category {
-  background:#05985f; /* سبز پررنگ‌تر */
+  background:#05985f;
   color:white;
-  padding:25px;
-  margin:20px 0;
+  padding:22px;
+  margin:18px 0;
   cursor:pointer;
-  font-size:30px;
+  font-size:28px;
   border-radius:15px;
   box-shadow:0 6px 20px rgba(0,0,0,0.25);
-  transition:0.3s;
 }
-.category:hover { background:#047a4a; }
 
 .items {
   display:none;
   background:#fff;
   border-radius:15px;
-  margin-bottom:25px;
+  margin-bottom:20px;
   padding:20px;
-  box-shadow:0 6px 25px rgba(0,0,0,0.08);
+}
+
+.items.show{
+  display:block;
 }
 
 .item {
   display:flex;
-  justify-content: space-between;
-  padding:18px 0;
+  justify-content:space-between;
+  padding:15px 0;
   border-bottom:1px solid #eee;
-  font-size:24px; /* محصولات بزرگ‌تر */
+  font-size:22px;
 }
-.item:last-child {
+.item:last-child{
   border-bottom:none;
 }
-.item .name-desc {
-  text-align:right;
-}
-.item .price {
-  text-align:left;
-  font-weight:bold;
-  min-width:70px;
-}
-.item small {
+
+.item small{
   color:#555;
-  font-size:20px;
+  font-size:18px;
 }
 </style>
 </head>
+
 <body>
+
 <div class="container">
-<h1>منوی کافه کاردیتو</h1>
-
-<div id="menu-container"></div>
-
+  <h1>منوی کافه کاردیتو</h1>
+  <div id="menu-container"></div>
 </div>
 
 <script>
-// لینک CSV گوگل شیتت را اینجا جایگزین کن
 const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pub?gid=0&single=true&output=csv";
 
 function toggleCategory(id){
-  const el = document.getElementById(id);
-  el.style.display = el.style.display==='none'?'block':'none';
+  document.getElementById(id).classList.toggle("show");
 }
 
 fetch(CSV_URL)
-.then(r => r.text())
-.then(text => {
-  const rows = text.split('\n').slice(1).filter(r=>r.trim()!=="");
-  const categories = {};
+.then(r=>r.text())
+.then(text=>{
+  const rows = text.split('\n').slice(1).filter(r=>r.trim());
+  const cats = {};
 
-  rows.forEach(row => {
-    const cols = row.split(',');
-    const [category, name, desc, price, img, status] = cols.map(c=>c.trim());
-    if(status==='on'){
-      if(!categories[category]) categories[category] = [];
-      categories[category].push({name, desc, price, img});
+  rows.forEach(row=>{
+    const [cat,name,desc,price,img,status] = row.split(';').map(x=>x.trim());
+    if(status==="on"){
+      if(!cats[cat]) cats[cat]=[];
+      cats[cat].push({name,desc,price});
     }
   });
 
-  const container = document.getElementById('menu-container');
+  const c = document.getElementById("menu-container");
 
-  Object.keys(categories).forEach(cat=>{
-    const catDiv = document.createElement('div');
-    catDiv.className = 'category';
-    catDiv.innerText = cat;
-    catDiv.onclick = ()=>toggleCategory(cat);
-    container.appendChild(catDiv);
+  Object.keys(cats).forEach(cat=>{
+    const id = "cat-"+cat.replace(/\s+/g,'-');
 
-    const itemsDiv = document.createElement('div');
-    itemsDiv.className = 'items';
-    itemsDiv.id = cat;
+    const h = document.createElement("div");
+    h.className="category";
+    h.innerText=cat;
+    h.onclick=()=>toggleCategory(id);
+    c.appendChild(h);
 
-    categories[cat].forEach(prod=>{
-      const itemDiv = document.createElement('div');
-      itemDiv.className = 'item';
-      itemDiv.innerHTML = `
-        <div class="name-desc">
-          ${prod.name}<br><small>${prod.desc}</small>
-        </div>
-        <div class="price">${prod.price}</div>
+    const box=document.createElement("div");
+    box.className="items";
+    box.id=id;
+
+    cats[cat].forEach(p=>{
+      const d=document.createElement("div");
+      d.className="item";
+      d.innerHTML=`
+        <div>${p.name}<br><small>${p.desc}</small></div>
+        <div>${p.price}</div>
       `;
-      itemsDiv.appendChild(itemDiv);
+      box.appendChild(d);
     });
 
-    container.appendChild(itemsDiv);
+    c.appendChild(box);
   });
 });
 </script>
+
 </body>
 </html>
