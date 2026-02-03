@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -12,69 +11,77 @@ body {
   margin:0;
   padding:0;
   min-height: 100vh;
-  background: linear-gradient(160deg, #d3d3d3 0%, #8fbf8f 100%); /* خاکستری به سبز */
+  background: #046d44; /* سبز زمردی */
   position: relative;
   overflow-x: hidden;
 }
 
-/* اشکال هندسی سبک روی پس‌زمینه */
+/* مثلث‌های نامتقارن روی پس‌زمینه */
 body::before {
   content:"";
   position:absolute;
   width:100%;
   height:100%;
   background:
-    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.08) 0 60px, transparent 60px),
-    radial-gradient(circle at 75% 75%, rgba(0,0,0,0.03) 0 120px, transparent 120px);
+    repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.05) 0 30px,
+      transparent 30px 60px
+    ),
+    repeating-linear-gradient(
+      -30deg,
+      rgba(0,0,0,0.03) 0 40px,
+      transparent 40px 80px
+    );
   pointer-events:none;
 }
 
 .container {
   max-width:900px;
   margin:auto;
-  padding:25px;
+  padding:30px;
   background: rgba(255,255,255,0.95);
   border-radius:25px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
 h1 {
   text-align:center;
   font-family: 'Permanent Marker', cursive;
-  font-size:60px; /* سر برگ بزرگ */
-  color:#2e2e2e;
-  text-shadow:2px 2px 6px rgba(0,0,0,0.15);
+  font-size:62px; /* سر برگ بزرگ */
+  color:#fff;
+  text-shadow:2px 2px 8px rgba(0,0,0,0.35);
   margin-bottom:50px;
 }
 
 .category {
-  background:#6a9e6a; /* سبز خاکستری شیک */
+  background:#05985f; /* سبز پررنگ‌تر */
   color:white;
-  padding:22px;
-  margin:18px 0;
+  padding:25px;
+  margin:20px 0;
   cursor:pointer;
-  font-size:28px;
-  border-radius:12px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.2);
+  font-size:30px;
+  border-radius:15px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.25);
   transition:0.3s;
 }
-.category:hover { background:#598f59; }
+.category:hover { background:#047a4a; }
 
 .items {
   display:none;
   background:#fff;
-  border-radius:12px;
+  border-radius:15px;
   margin-bottom:25px;
-  padding:18px;
-  box-shadow:0 5px 20px rgba(0,0,0,0.05);
+  padding:20px;
+  box-shadow:0 6px 25px rgba(0,0,0,0.08);
 }
 
 .item {
   display:flex;
   justify-content: space-between;
-  padding:16px 0;
+  padding:18px 0;
   border-bottom:1px solid #eee;
-  font-size:22px; /* محصولات بزرگ‌تر */
+  font-size:24px; /* محصولات بزرگ‌تر */
 }
 .item:last-child {
   border-bottom:none;
