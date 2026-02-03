@@ -1,177 +1,147 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-<meta charset="UTF-8">
-<title>منوی کافه کاردیتو</title>
-<link href="https://fonts.googleapis.com/css2?family=Vazir&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>منوی کافه کاردیتو</title>
 
-<style>
-body {
-  font-family: "Vazir", sans-serif;
-  direction: rtl;
-  margin:0;
-  min-height:100vh;
-  background:#046d44; /* سبز زمردی */
-  overflow-x:hidden;
-  position:relative;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Tahoma, sans-serif;
+      background: #0f6f5c; /* سبز زمردی */
+      color: #2b2b2b;
+    }
 
-/* لوگوی بزرگ وسط با موج */
-body::before {
-  content:"";
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:520px; /* بزرگ‌تر */
-  height:520px;
-  background:url("logo.png") center/contain no-repeat;
-  opacity:1;
-  animation: waveFade 6s infinite ease-in-out;
-  pointer-events:none;
-}
+    .background-logo {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 300px;
+      opacity: 0.25;
+      z-index: 0;
+    }
 
-/* موج نور + محوشدن */
-@keyframes waveFade {
-  0% {
-    mask-image: linear-gradient(90deg, transparent 0%, black 20%, black 100%);
-    opacity:0.9;
-  }
-  50% {
-    mask-image: linear-gradient(90deg, black 0%, black 60%, transparent 100%);
-    opacity:0.3;
-  }
-  100% {
-    mask-image: linear-gradient(90deg, transparent 0%, black 20%, black 100%);
-    opacity:0.9;
-  }
-}
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
 
-.container {
-  max-width:900px;
-  margin:40px auto;
-  padding:30px;
-  background:rgba(85,85,85,0.96); /* خاکستری پررنگ */
-  border-radius:26px;
-  box-shadow:0 25px 50px rgba(0,0,0,0.3);
-  position:relative;
-  z-index:1;
-  text-align:center;
-}
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
 
-h1 {
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:'Permanent Marker', cursive;
-  font-size:62px;
-  color:#fff;
-  margin-bottom:45px;
-  text-shadow:2px 2px 10px rgba(0,0,0,0.4);
-}
+    .header img {
+      width: 60px;
+    }
 
-/* لوگوی کنار عنوان – برق ملایم */
-h1 img {
-  height:110px;
-  margin-left:25px;
-  animation: glow 2.5s infinite ease-in-out;
-}
+    .header h1 {
+      font-size: 36px;
+      color: #3a3a3a;
+      margin: 0;
+    }
 
-@keyframes glow {
-  0%,100% { filter:brightness(100%); }
-  50% { filter:brightness(150%); }
-}
+    .category {
+      background: #e6e6e6;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: bold;
+    }
 
-.category {
-  background:#05985f;
-  color:#fff;
-  padding:26px;
-  margin:20px 0;
-  font-size:30px;
-  border-radius:16px;
-  cursor:pointer;
-  box-shadow:0 8px 22px rgba(0,0,0,0.25);
-  transition:0.3s;
-}
-.category:hover { background:#047a4a; }
+    .items {
+      display: none;
+      margin-top: 10px;
+    }
 
-.items {
-  display:none;
-  background:#fff;
-  border-radius:16px;
-  padding:22px;
-  margin-bottom:25px;
-}
+    .item {
+      display: flex;
+      justify-content: space-between;
+      background: #f5f5f5;
+      border-radius: 10px;
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      font-size: 20px;
+    }
 
-.item {
-  display:flex;
-  justify-content:space-between;
-  padding:18px 0;
-  border-bottom:1px solid #eee;
-  font-size:24px;
-}
-.item:last-child { border-bottom:none; }
+    .item .info {
+      text-align: right;
+    }
 
-.name-desc { text-align:right; }
-.price { font-weight:bold; min-width:80px; }
-small { font-size:20px; color:#555; }
-</style>
+    .item .price {
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
-<div class="container">
-  <h1>
-    منوی کافه کاردیتو
-    <img src="logo.png" alt="لوگو">
-  </h1>
 
-  <div id="menu-container"></div>
-</div>
+  <!-- لوگوی وسط -->
+  <img src="logo.png" class="background-logo">
 
-<script>
-const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pub?gid=0&single=true&output=csv";
+  <div class="container">
 
-function toggleCategory(id){
-  const el=document.getElementById(id);
-  el.style.display = el.style.display==="block"?"none":"block";
-}
+    <!-- هدر -->
+    <div class="header">
+      <img src="logo.png">
+      <h1>منوی کافه کاردیتو</h1>
+    </div>
 
-fetch(CSV_URL)
-.then(r=>r.text())
-.then(text=>{
-  const rows=text.split("\n").slice(1).filter(r=>r.trim());
-  const cats={};
+    <!-- دسته نوشیدنی گرم -->
+    <div class="category" onclick="toggleMenu()">
+      ☕ نوشیدنی‌های گرم
+    </div>
 
-  rows.forEach(r=>{
-    const [c,n,d,p,_,s]=r.split(",");
-    if(s==="on"){
-      if(!cats[c]) cats[c]=[];
-      cats[c].push({n,d,p});
+    <div class="items" id="menuItems"></div>
+
+  </div>
+
+  <script>
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pubhtml?gid=0&single=true";
+
+    fetch(sheetURL)
+      .then(res => res.text())
+      .then(text => {
+        const rows = text.trim().split(/\r?\n/).slice(1);
+        const container = document.getElementById("menuItems");
+
+        container.innerHTML = ""; // فقط یک بار پاک می‌شود
+
+        rows.forEach(row => {
+          const cols = row.split(",");
+          const category = cols[0]?.trim();
+          const name = cols[1]?.trim();
+          const price = cols[2]?.trim();
+          const desc = cols[3]?.trim();
+
+          if (category === "نوشیدنی گرم") {
+            container.insertAdjacentHTML("beforeend", `
+              <div class="item">
+                <div class="info">
+                  <div>${name}</div>
+                  <div style="font-size:14px; color:#555">${desc || ""}</div>
+                </div>
+                <div class="price">${price}</div>
+              </div>
+            `);
+          }
+        });
+      });
+
+    function toggleMenu() {
+      const menu = document.getElementById("menuItems");
+      menu.style.display = menu.style.display === "none" ? "block" : "none";
     }
-  });
+  </script>
 
-  const box=document.getElementById("menu-container");
-  Object.keys(cats).forEach(c=>{
-    const h=document.createElement("div");
-    h.className="category";
-    h.innerText=c;
-    h.onclick=()=>toggleCategory(c);
-    box.appendChild(h);
-
-    const i=document.createElement("div");
-    i.className="items";
-    i.id=c;
-
-    cats[c].forEach(x=>{
-      i.innerHTML+=`
-        <div class="item">
-          <div class="name-desc">${x.n}<br><small>${x.d}</small></div>
-          <div class="price">${x.p}</div>
-        </div>`;
-    });
-    box.appendChild(i);
-  });
-});
-</script>
 </body>
 </html>
