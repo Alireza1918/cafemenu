@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fa">
 <head>
@@ -11,69 +12,69 @@ body {
   margin:0;
   padding:0;
   min-height: 100vh;
-  background: linear-gradient(135deg, #a8e6cf 0%, #56ab2f 100%);
+  background: linear-gradient(160deg, #d3d3d3 0%, #8fbf8f 100%); /* خاکستری به سبز */
   position: relative;
   overflow-x: hidden;
 }
 
-/* ماه و اشکال هندسی */
+/* اشکال هندسی سبک روی پس‌زمینه */
 body::before {
   content:"";
   position:absolute;
   width:100%;
   height:100%;
   background:
-    radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0 50px, transparent 50px),
-    repeating-radial-gradient(circle at 20% 80%, rgba(255,255,255,0.05) 0 20px, transparent 20px 40px);
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.08) 0 60px, transparent 60px),
+    radial-gradient(circle at 75% 75%, rgba(0,0,0,0.03) 0 120px, transparent 120px);
   pointer-events:none;
 }
 
 .container {
   max-width:900px;
   margin:auto;
-  padding:20px;
-  background: rgba(255,255,255,0.97);
-  border-radius:20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  padding:25px;
+  background: rgba(255,255,255,0.95);
+  border-radius:25px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
 }
 
 h1 {
   text-align:center;
   font-family: 'Permanent Marker', cursive;
-  font-size:48px;
+  font-size:60px; /* سر برگ بزرگ */
   color:#2e2e2e;
-  text-shadow:2px 2px 5px rgba(0,0,0,0.2);
-  margin-bottom:40px;
+  text-shadow:2px 2px 6px rgba(0,0,0,0.15);
+  margin-bottom:50px;
 }
 
 .category {
-  background:#56ab2f;
+  background:#6a9e6a; /* سبز خاکستری شیک */
   color:white;
-  padding:20px;
-  margin:15px 0;
+  padding:22px;
+  margin:18px 0;
   cursor:pointer;
-  font-size:26px;
-  border-radius:10px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+  font-size:28px;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.2);
   transition:0.3s;
 }
-.category:hover { background:#4a9726; }
+.category:hover { background:#598f59; }
 
 .items {
   display:none;
   background:#fff;
   border-radius:12px;
   margin-bottom:25px;
-  padding:15px;
+  padding:18px;
   box-shadow:0 5px 20px rgba(0,0,0,0.05);
 }
 
 .item {
   display:flex;
   justify-content: space-between;
-  padding:15px 0;
+  padding:16px 0;
   border-bottom:1px solid #eee;
-  font-size:20px; /* متن بزرگ‌تر */
+  font-size:22px; /* محصولات بزرگ‌تر */
 }
 .item:last-child {
   border-bottom:none;
@@ -84,11 +85,11 @@ h1 {
 .item .price {
   text-align:left;
   font-weight:bold;
-  min-width:60px;
+  min-width:70px;
 }
 .item small {
   color:#555;
-  font-size:18px;
+  font-size:20px;
 }
 </style>
 </head>
