@@ -21,12 +21,21 @@ body{
   border-radius:25px;
 }
 
-h1{
+.header{
   text-align:center;
+  margin-bottom:30px;
+}
+
+.header img{
+  max-width:140px;
+  margin-bottom:10px;
+}
+
+.header h1{
   font-family:'Permanent Marker',cursive;
-  font-size:62px;
+  font-size:56px;
   color:#fff;
-  margin-bottom:40px;
+  margin:0;
 }
 
 /* ===== tabs ===== */
@@ -67,19 +76,34 @@ h1{
   animation:slide 0.3s ease;
 }
 
-.items.left{ transform-origin:right; }
-.items.right{ transform-origin:left; }
-
 @keyframes slide{
-  from{ transform:scaleX(0); }
-  to{ transform:scaleX(1); }
+  from{transform:scaleY(0);}
+  to{transform:scaleY(1);}
 }
 
 .item{
   display:flex;
+  gap:15px;
+  padding:15px 0;
+  align-items:flex-start;
+}
+
+.item img{
+  width:60px;
+  height:60px;
+  border-radius:10px;
+  object-fit:cover;
+  background:#ddd;
+}
+
+.item-content{
+  flex:1;
+}
+
+.item-top{
+  display:flex;
   align-items:center;
   font-size:24px;
-  padding:12px 0;
 }
 
 .name{
@@ -101,32 +125,35 @@ h1{
   font-size:14px;
   margin-right:4px;
 }
+
+.desc{
+  font-size:18px;
+  color:#555;
+  margin-top:6px;
+}
 </style>
 </head>
 
 <body>
 <div class="container">
-  <h1>منوی کافه کاردیتو</h1>
+
+  <div class="header">
+    <img src="logo.png" alt="Logo">
+    <h1>منوی کافه کاردیتو</h1>
+  </div>
 
   <div class="tabs-wrapper">
     <div class="tabs" id="right-tabs"></div>
     <div class="tabs" id="left-tabs"></div>
   </div>
+
 </div>
 
 <script>
 const CSV_URL="https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pub?output=csv";
 
-function safeId(text){
-  return text.replace(/\s+/g,'_').replace(/[^\w]/g,'');
-}
-
-function toggle(tab,id){
-  document.querySelectorAll('.items').forEach(i=>i.style.display='none');
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-
-  tab.classList.add('active');
-  document.getElementById(id).style.display='block';
+function safeId(t){
+  return t.replace(/\s+/g,'_').replace(/[^\w]/g,'');
 }
 
 fetch(CSV_URL)
@@ -139,7 +166,7 @@ fetch(CSV_URL)
     const [cat,name,desc,price,img,status]=r.split(',').map(c=>c.trim());
     if(status==='on'){
       if(!cats[cat]) cats[cat]=[];
-      cats[cat].push({name,price});
+      cats[cat].push({name,desc,price,img});
     }
   });
 
@@ -149,28 +176,38 @@ fetch(CSV_URL)
 
   Object.keys(cats).forEach(cat=>{
     const id=safeId(cat);
+
     const tab=document.createElement('div');
     tab.className='tab';
     tab.innerText=cat;
 
     const items=document.createElement('div');
-    items.className='items '+(side?'right':'left');
+    items.className='items';
     items.id=id;
 
     cats[cat].forEach(p=>{
       items.innerHTML+=`
         <div class="item">
-          <span class="name">${p.name}</span>
-          <span class="dots"></span>
-          <span class="price">${p.price}<small>تومان</small></span>
+          <img src="${p.img || ''}">
+          <div class="item-content">
+            <div class="item-top">
+              <span class="name">${p.name}</span>
+              <span class="dots"></span>
+              <span class="price">${p.price}<small>تومان</small></span>
+            </div>
+            <div class="desc">${p.desc}</div>
+          </div>
         </div>`;
     });
 
-    tab.onclick=()=>toggle(tab,id);
+    tab.onclick=()=>{
+      const open=items.style.display==='block';
+      items.style.display=open?'none':'block';
+      tab.classList.toggle('active',!open);
+    };
 
     (side?right:left).appendChild(tab);
     (side?right:left).appendChild(items);
-
     side=!side;
   });
 });
