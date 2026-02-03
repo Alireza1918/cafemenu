@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <title>منوی کافه</title>
+  <style>
+    body { font-family: sans-serif; background:#fafafa; }
+    .item { margin:10px 0; padding:10px; border-bottom:1px solid #ddd; }
+    .price { font-weight:bold; }
+  </style>
+</head>
+<body>
+
+<h1>منوی نوشیدنی</h1>
+<div id="menu"></div>
+
+<script>
+fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pub?gid=0&single=true&output=csv')
+  .then(r => r.text())
+  .then(text => {
+    const rows = text.split('\n').slice(1);
+    rows.forEach(row => {
+      const [cat,name,desc,price,img,status] = row.split(',');
+      if(status?.trim()==='on'){
+        document.getElementById('menu').innerHTML += `
+          <div class="item">
+            <div><strong>${name}</strong> - <span class="price">${price}</span></div>
+            <div>${desc}</div>
+          </div>`;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
