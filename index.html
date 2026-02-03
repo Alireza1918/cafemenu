@@ -1,36 +1,127 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <title>منوی کافه</title>
-  <style>
-    body { font-family: sans-serif; background:#fafafa; }
-    .item { margin:10px 0; padding:10px; border-bottom:1px solid #ddd; }
-    .price { font-weight:bold; }
-  </style>
+<meta charset="UTF-8">
+<title>منوی کافه</title>
+<style>
+body {
+  font-family: "Vazir", sans-serif;
+  background:#f9f9f9;
+  direction: rtl;
+  margin:0;
+  padding:0;
+}
+.container {
+  max-width:800px;
+  margin:auto;
+  padding:20px;
+}
+h1 {
+  text-align:center;
+  margin-bottom:30px;
+}
+.category {
+  background:#6d4c41;
+  color:white;
+  padding:15px;
+  margin:10px 0;
+  cursor:pointer;
+  font-size:20px;
+  border-radius:5px;
+}
+.items {
+  display:none;
+  background:#fff;
+  border:1px solid #ddd;
+  border-radius:5px;
+  margin-bottom:20px;
+  padding:10px;
+}
+.item {
+  display:flex;
+  justify-content: space-between;
+  padding:8px 0;
+  border-bottom:1px solid #eee;
+}
+.item:last-child {
+  border-bottom:none;
+}
+.item .name-desc {
+  text-align:right;
+}
+.item .price {
+  text-align:left;
+  font-weight:bold;
+  min-width:40px;
+}
+</style>
 </head>
 <body>
+<div class="container">
+<h1>منوی کافه</h1>
 
-<h1>منوی نوشیدنی</h1>
-<div id="menu"></div>
+<div id="menu-container"></div>
+
+</div>
 
 <script>
-fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pub?gid=0&single=true&output=csv')
-  .then(r => r.text())
-  .then(text => {
-    const rows = text.split('\n').slice(1);
-    rows.forEach(row => {
-      const [cat,name,desc,price,img,status] = row.split(',');
-      if(status?.trim()==='on'){
-        document.getElementById('menu').innerHTML += `
-          <div class="item">
-            <div><strong>${name}</strong> - <span class="price">${price}</span></div>
-            <div>${desc}</div>
-          </div>`;
-      }
-    });
-  });
-</script>
+// لینک CSV گوگل شیتت رو اینجا جایگزین کن
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRp_aRQ_XjogTCw1nrzonw8YLUyNuVFO1nviydXbz2sSZOv5Ma16ChADiq5UqqIIx7jAEmltZpUfJ_t/pub?gid=0&single=true&output=csv";
 
+// باز و بسته کردن دسته‌ها
+function toggleCategory(id){
+  const el = document.getElementById(id);
+  el.style.display = el.style.display==='none'?'block':'none';
+}
+
+// گرفتن CSV و ساخت منو
+fetch(CSV_URL)
+.then(r => r.text())
+.then(text => {
+  const rows = text.split('\n').slice(1).filter(r=>r.trim()!=="");
+  const categories = {};
+
+  // ساخت آبجکت دسته‌ها
+  rows.forEach(row => {
+    const cols = row.split(',');
+    const [category, name, desc, price, img, status] = cols.map(c=>c.trim());
+    if(status==='on'){
+      if(!categories[category]) categories[category] = [];
+      categories[category].push({name, desc, price, img});
+    }
+  });
+
+  const container = document.getElementById('menu-container');
+
+  Object.keys(categories).forEach(cat=>{
+    // دسته‌بندی
+    const catDiv = document.createElement('div');
+    catDiv.className = 'category';
+    catDiv.innerText = cat;
+    catDiv.onclick = ()=>toggleCategory(cat);
+    container.appendChild(catDiv);
+
+    // محصولات
+    const itemsDiv = document.createElement('div');
+    itemsDiv.className = 'items';
+    itemsDiv.id = cat;
+
+    categories[cat].forEach(prod=>{
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'item';
+      itemDiv.innerHTML = `
+        <div class="name-desc">
+          ${prod.name}<br><small>${prod.desc}</small>
+        </div>
+        <div class="price">${prod.price}</div>
+      `;
+      itemsDiv.appendChild(itemDiv);
+    });
+
+    container.appendChild(itemsDiv);
+  });
+});
+</script>
 </body>
 </html>
+
